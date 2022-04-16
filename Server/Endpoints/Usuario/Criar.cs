@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Server.Endpoints.Usuario.request;
+﻿using Microsoft.AspNetCore.Mvc;
+using Server.Endpoints.UsuarioForm.request;
+using Server.Endpoints.UsuarioForm.Response;
 using Server.Entities;
 using Server.Services.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Threading.Tasks;
 
 namespace Server.Endpoints.UsuarioForm
@@ -11,19 +12,26 @@ namespace Server.Endpoints.UsuarioForm
     [ApiController]
     public class Criar : ControllerBase
     {
-        private IUsuarioService _usuarioService;
-        public Criar(IUsuarioService usuarioService)
+        private IRepository _repository;
+        public Criar(IRepository repository)
         {
-            _usuarioService = usuarioService;
+            _repository = repository;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> CriarUsuario(NovoUsuario usuario)
+        [HttpPost("/Usuario")]
+        [SwaggerOperation(
+            Summary = "Cria um Usuario",
+            Description = "Cria Usuario",
+            OperationId = "Usuario.Criar",
+            Tags = new[] { "UsuarioEndpoints" })
+        ]
+        public async Task<ActionResult> CriarUsuario(NovoUsuario request)
         {
             try
             {
-                await _usuarioService.CreateUsuario(usuario);
-                return CreatedAtRoute(nameof(_usuarioService.GetUsuario), new { id = usuario.Id, usuario.Senha }, usuario);
+                var usuario = new Usuario(request.Nome, request.Senha);
+                var usuarioCriado = await _repository.AddAsync(usuario);
+                return Ok(NovoUsuarioResponse.Response(usuarioCriado));
             }
             catch
             {

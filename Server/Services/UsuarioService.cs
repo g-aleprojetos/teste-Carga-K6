@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server.Services
 {
-    public class UsuarioService : IUsuarioService
+    public class UsuarioService : IRepository
     {
         private readonly ApiContext _context;
 
@@ -50,6 +50,8 @@ namespace Server.Services
             return usuario;
         }
 
+
+
         public async Task CreateUsuario(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
@@ -67,5 +69,39 @@ namespace Server.Services
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
         }
+
+
+
+
+        public Task<T> GetByIdAsync<T>(Guid id) where T : BaseEntity
+        {
+            return _context.Set<T>().SingleOrDefaultAsync(e => e.Id == id);
+        }
+
+        public Task<List<T>> ListAsync<T>() where T : BaseEntity
+        {
+            return _context.Set<T>().ToListAsync();
+        }
+  
+        public async Task<T> AddAsync<T>(T entity) where T : BaseEntity
+        {
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task UpdateAsync<T>(T entity) where T : BaseEntity
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync<T>(T entity) where T : BaseEntity
+        {
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

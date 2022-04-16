@@ -28,12 +28,21 @@ namespace Server
             services.AddDbContext<ApiContext>(options =>
                                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IRepository, UsuarioService>();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Server", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Server",
+                    Version = "v1",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Alexandre Gonçalves",
+                        Email = "g.aleprojetos@gmail.com",
+                    },
+                });
+                c.EnableAnnotations();
             });
         }
 
