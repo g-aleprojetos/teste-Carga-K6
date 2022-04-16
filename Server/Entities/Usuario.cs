@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace Server.Entities
 {
-    public class Usuario
+    public class Usuario: BaseEntity
     {
-        public Guid Id { get; set; }
         public String Nome { get; set; }
-        public List<Calendario> Calendarios { get; set; }
+        public String Senha { get; set; }
     }
 }

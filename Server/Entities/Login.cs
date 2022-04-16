@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace Server.Entities
+﻿namespace Server.Entities
 {
-    public class Login
+    public class Login : BaseEntity
     {
-        public Guid Id { get; set; }
         public Usuario Usuario { get; set; }
-        public String Senha { get; set; }
+
     }
 }
